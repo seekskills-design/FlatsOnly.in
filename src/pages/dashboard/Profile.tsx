@@ -68,7 +68,7 @@ export default function Profile() {
     if (profile) {
       setName(profile.name || "");
       setPhone(profile.phone || "");
-      setUserType(profile.userType || "");
+      setUserType(profile.userType || (profile.role === 'owner' ? 'Property Owner' : ''));
       setPhotoUrl(profile.photoUrl || "");
     }
   }, [profile]);
