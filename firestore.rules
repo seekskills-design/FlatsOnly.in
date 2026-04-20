@@ -1,0 +1,131 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "thehotskills@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function hasOnlyAllowedFields(allowedFields) {
+      return request.resource.data.keys().hasOnly(allowedFields);
+    }
+
+    function hasRequiredFields(requiredFields) {
+      return request.resource.data.keys().hasAll(requiredFields);
+    }
+
+    function isValidString(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+             request.resource.data[field].size() >= minLen &&
+             request.resource.data[field].size() <= maxLen;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser() {
+      let data = request.resource.data;
+      return hasRequiredFields(['uid', 'name', 'role', 'createdAt']) &&
+             data.uid == request.auth.uid &&
+             (!('email' in data) || data.email is string) &&
+             (!('phone' in data) || data.phone is string) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.role in ['tenant', 'owner', 'admin'] &&
+             data.createdAt is string;
+    }
+
+    function isValidProperty() {
+      let data = request.resource.data;
+      return hasRequiredFields(['ownerId', 'title', 'rent', 'deposit', 'bhk', 'location', 'status', 'createdAt']) &&
+             data.ownerId == request.auth.uid &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.rent is number && data.rent >= 0 &&
+             data.deposit is number && data.deposit >= 0 &&
+             data.bhk in ['1 BHK', '2 BHK', '3 BHK', '4 BHK', '4+ BHK'] &&
+             data.location is string && data.location.size() > 0 &&
+             data.status in ['pending', 'active', 'rejected', 'rented'] &&
+             data.createdAt is string;
+    }
+
+    function isValidLead() {
+      let data = request.resource.data;
+      return hasRequiredFields(['propertyId', 'tenantId', 'ownerId', 'status', 'createdAt']) &&
+             data.tenantId == request.auth.uid &&
+             data.propertyId is string &&
+             data.ownerId is string &&
+             data.status in ['new', 'contacted', 'closed'] &&
+             data.createdAt is string;
+    }
+
+    function isValidSociety() {
+      let data = request.resource.data;
+      return hasRequiredFields(['name', 'city', 'area', 'status']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             data.city is string && data.city.size() > 0 &&
+             data.area is string && data.area.size() > 0 &&
+             data.status in ['pending', 'verified'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && 
+                    isOwner(userId) && 
+                    (request.resource.data.role in ['tenant', 'owner'] || isAdmin());
+      allow update: if isAuthenticated() && 
+                    ((isOwner(userId) && (request.resource.data.role == resource.data.role || (resource.data.role == 'tenant' && request.resource.data.role == 'owner'))) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /properties/{propertyId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && 
+                    ((resource.data.ownerId == request.auth.uid && 
+                      request.resource.data.ownerId == resource.data.ownerId) || 
+                     isAdmin());
+      allow delete: if isAuthenticated() && (resource.data.ownerId == request.auth.uid || isAdmin());
+    }
+
+    match /leads/{leadId} {
+      allow read: if isAuthenticated() && 
+                  (resource.data.tenantId == request.auth.uid || 
+                   resource.data.ownerId == request.auth.uid || 
+                   isAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && 
+                    ((resource.data.ownerId == request.auth.uid && 
+                      request.resource.data.tenantId == resource.data.tenantId &&
+                      request.resource.data.propertyId == resource.data.propertyId &&
+                      request.resource.data.ownerId == resource.data.ownerId) || 
+                     isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /societies/{societyId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isValidSociety() && (request.resource.data.status == 'pending' || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

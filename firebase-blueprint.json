@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the platform (tenant, owner, or admin)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["tenant", "owner", "admin"] },
+        "phone": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "role", "createdAt"]
+    },
+    "Property": {
+      "title": "Property",
+      "description": "A flat listed for rent",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string", "description": "UID of the owner" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "rent": { "type": "number" },
+        "deposit": { "type": "number" },
+        "bhk": { "type": "string", "enum": ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "4+ BHK"] },
+        "location": { "type": "string" },
+        "societyId": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["pending", "active", "rejected", "rented"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "title", "rent", "deposit", "bhk", "location", "status", "createdAt"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "An inquiry made by a tenant for a property",
+      "type": "object",
+      "properties": {
+        "propertyId": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "contacted", "closed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["propertyId", "tenantId", "ownerId", "status", "createdAt"]
+    },
+    "Society": {
+      "title": "Society",
+      "description": "A residential society or apartment complex",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "city": { "type": "string" },
+        "area": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "verified"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "city", "area", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles"
+    },
+    "/properties/{propertyId}": {
+      "schema": { "$ref": "#/entities/Property" },
+      "description": "Stores property listings"
+    },
+    "/leads/{leadId}": {
+      "schema": { "$ref": "#/entities/Lead" },
+      "description": "Stores tenant inquiries"
+    },
+    "/societies/{societyId}": {
+      "schema": { "$ref": "#/entities/Society" },
+      "description": "Stores society data for autocomplete"
+    }
+  }
+}
