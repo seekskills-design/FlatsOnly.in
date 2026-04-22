@@ -5,6 +5,7 @@ import { Building2, Users, Eye, TrendingUp, ArrowUpRight, Loader2 } from "lucide
 import { db } from "@/firebase"
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore"
 import { useAuth } from "@/contexts/AuthContext"
+import SEO from "@/components/SEO"
 
 interface Lead {
   id: string;
@@ -71,6 +72,7 @@ export default function DashboardOverview() {
 
   return (
     <div className="space-y-6">
+      <SEO title="Dashboard Overview" description="Manage your property listings and leads." noindex={true} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white tracking-tight">Overview</h1>
       </div>

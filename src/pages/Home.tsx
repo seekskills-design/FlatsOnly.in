@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { db } from "@/firebase"
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore"
+import SEO from "@/components/SEO"
 
 interface Property {
   id: string;
@@ -83,6 +84,22 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <SEO 
+        title="Find Flats for Rent with Zero Brokerage" 
+        description="Connect directly with verified property owners for the best rental deals zero brokerage. Find 1 BHK, 2 BHK, and 3 BHK flats for rent."
+        canonical="/"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "FlatsOnly.in",
+          "url": "https://flatsonly.in/",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://flatsonly.in/flats?query={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }}
+      />
       {/* First Time Visitor Popup */}
       {showPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">

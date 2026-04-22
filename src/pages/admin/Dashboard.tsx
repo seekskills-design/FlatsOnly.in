@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Users, Home, PhoneCall, TrendingUp, Loader2 } from "lucide-react"
 import { db } from "@/firebase"
 import { collection, query, getDocs, orderBy, limit, where } from "firebase/firestore"
+import SEO from "@/components/SEO"
 
 interface Property {
   id: string;
@@ -76,6 +77,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
+      <SEO title="Admin Dashboard" description="FlatsOnly admin control panel." noindex={true} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white tracking-tight">Admin Dashboard</h1>
       </div>

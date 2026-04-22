@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/Card"
 import { db, storage } from "@/firebase"
 import { collection, addDoc, serverTimestamp, getDocs, query, where } from "firebase/firestore"
 import { useAuth } from "@/contexts/AuthContext"
+import SEO from "@/components/SEO"
 
 // Utility function to compress image before upload
 const compressImage = async (file: File, maxWidth = 800, maxHeight = 800, quality = 0.6): Promise<string> => {
@@ -299,6 +300,7 @@ export default function AddProperty() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      <SEO title="Add New Property" description="List a new flat on FlatsOnly." noindex={true} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white tracking-tight">Post Property</h1>
         <span className="text-blue-100 font-medium">Step {step} of {totalSteps}</span>

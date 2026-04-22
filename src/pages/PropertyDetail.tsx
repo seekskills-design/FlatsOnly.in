@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/Input"
 import { db } from "@/firebase"
 import { doc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, limit, orderBy } from "firebase/firestore"
 import { useAuth } from "@/contexts/AuthContext"
+import SEO from "@/components/SEO"
 
 interface OwnerProfile {
   name: string;
@@ -193,6 +194,26 @@ export default function PropertyDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24 md:pb-12">
+      <SEO 
+        title={`${property.bhk} in ${property.location} for rent`} 
+        description={`Rent ${property.title} for ₹${property.rent}/month. Zero brokerage. Find more properties in ${property.location} exclusively on FlatsOnly.`}
+        canonical={`/property/${property.id}`}
+        image={Array.isArray(property.images) ? property.images[0] : (typeof property.images === 'string' ? property.images : undefined)}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": property.title,
+          "description": property.description,
+          "image": Array.isArray(property.images) ? property.images : undefined,
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "INR",
+            "price": property.rent,
+            "availability": "https://schema.org/InStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        }}
+      />
       {/* Image Gallery */}
       <div className="w-full h-[calc(40vh+90px)] md:h-[calc(60vh+90px)] bg-gray-200 relative overflow-hidden group">
         <img 

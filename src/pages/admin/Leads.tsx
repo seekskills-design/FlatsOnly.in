@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
 import { db } from "@/firebase"
 import { collection, query, getDocs, orderBy } from "firebase/firestore"
+import SEO from "@/components/SEO"
 
 interface Lead {
   id: string;
@@ -61,6 +62,7 @@ export default function AdminLeads() {
 
   return (
     <div className="space-y-6">
+      <SEO title="Platform Leads | Admin" description="FlatsOnly admin leads management." noindex={true} />
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Platform Leads</h1>

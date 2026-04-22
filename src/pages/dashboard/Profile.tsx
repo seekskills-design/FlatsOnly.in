@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Loader2, User, Phone, Save, Camera, Building } from "lucide-react";
+import SEO from "@/components/SEO";
 
 // Utility function to compress image before upload
 const compressImage = async (file: File, maxWidth = 400, maxHeight = 400, quality = 0.8): Promise<string> => {
@@ -138,6 +139,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      <SEO title="Profile Settings" description="Manage your user profile on FlatsOnly." noindex={true} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white tracking-tight">Profile Settings</h1>
       </div>

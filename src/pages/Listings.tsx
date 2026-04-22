@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { db } from "@/firebase"
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore"
+import SEO from "@/components/SEO"
 
 interface Property {
   id: string;
@@ -113,6 +114,11 @@ export default function Listings() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      <SEO 
+        title={searchTerm ? `Flats for Rent in ${searchTerm}` : "All Flats for Rent"} 
+        description="Browse hundreds of verified NO BROKERAGE flats for rent. Use our filters to find 1 BHK, 2 BHK, and 3 BHK houses in your preferred location."
+        canonical="/flats"
+      />
       {/* Search Header */}
       <div className="bg-white border-b border-gray-100 sticky top-16 z-30">
         <div className="container mx-auto px-4 py-4">

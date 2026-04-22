@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
 import { db } from "@/firebase"
 import { collection, query, getDocs, orderBy, doc, updateDoc, deleteDoc } from "firebase/firestore"
+import SEO from "@/components/SEO"
 
 interface Property {
   id: string;
@@ -89,6 +90,7 @@ export default function AdminProperties() {
 
   return (
     <div className="space-y-6">
+      <SEO title="Manage Properties | Admin" description="FlatsOnly admin properties management." noindex={true} />
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Properties Management</h1>

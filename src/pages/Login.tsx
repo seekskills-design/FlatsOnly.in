@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { useAuth } from "@/contexts/AuthContext"
 import { RecaptchaVerifier, ConfirmationResult } from "firebase/auth"
 import { auth } from "@/firebase"
+import SEO from "@/components/SEO"
 
 declare global {
   interface Window {
@@ -109,6 +110,11 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <SEO 
+        title="Login or Sign Up" 
+        description="Login to FlatsOnly.in to find to your next home zero brokerage or list your property."
+        canonical="/login"
+      />
       <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8">
         <Link to="/" className="flex items-center justify-center gap-2">
           <div className="bg-blue-600 p-2 rounded-xl shadow-sm">

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge"
 import { useAuth } from "@/contexts/AuthContext"
 import { db } from "@/firebase"
 import { collection, query, where, getDocs, orderBy, deleteDoc, doc, updateDoc } from "firebase/firestore"
+import SEO from "@/components/SEO"
 
 interface Property {
   id: string;
@@ -85,6 +86,7 @@ export default function MyListings() {
 
   return (
     <div className="space-y-6">
+      <SEO title="My Listings" description="Manage your property listings on FlatsOnly." noindex={true} />
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">My Listings</h1>
